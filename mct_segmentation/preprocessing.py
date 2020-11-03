@@ -47,7 +47,10 @@ class Mouse:
         img = self.load_img()
         lbl = np.copy(self.load_lbl())
         old_class_dict = self.classes()
-        return np.stack([self.assign_class_new_value(lbl, old_class_dict[class_name], new_class_dict[class_name]) for class_name in old_class_dict]).sum(axis=0)
+        new_lbl = np.stack([self.assign_class_new_value(lbl, old_class_dict[class_name], new_class_dict[class_name]) for class_name in old_class_dict]).sum(axis=0)
+        max_lbl = len(new_class_dict)-1
+        new_lbl[new_lbl>max_lbl] = 0
+        return new_lbl
     
     
 def make_paths():
@@ -76,9 +79,9 @@ def save_images_and_labels(mouse, class_dict):
         mask_name = mask_path/f'{mouse.path.stem}_{i}_P.png'
         img_names += [str(image_name)]
         msk_names += [str(mask_name)]
-        
-        Image.fromarray(imgs[:,:,i].astype(np.uint16)+1000).save(image_name)
-        Image.fromarray(lbls[:,:,i].astype(np.uint16)).save(mask_name)
+
+        Image.fromarray(((imgs[:,:,i]+1000)/10000*255).astype(np.uint8)).save(image_name) # see if fastai has better solution for this 
+        Image.fromarray(lbls[:,:,i].astype(np.uint8)).save(mask_name)
         
     return img_names, msk_names
 
