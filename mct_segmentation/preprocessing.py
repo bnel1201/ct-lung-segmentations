@@ -1,8 +1,23 @@
 from pathlib import Path
+import zipfile
+
+import wget
 import nibabel as nib
 from fastai.vision.all import *
 
+
+def download_and_unpack_data(rawpath):
+    filename = wget.download('https://ndownloader.figstatic.com/files/12981293', out=str(rawpath/'data.zip'))
+
+    with zipfile.ZipFile(dfilename, 'r') as zip_ref:
+        zip_ref.extractall(directory_to_extract_to)
+
+    if os.path.exists(filename):
+        os.remove(filename)
+
+
 class Mouse:
+    """Some scans have 2 organ segmentations 'Organ1' and 'Organ2'"""
     def __init__(self, mouse_path):
         self.path = mouse_path
         self.find_files()
@@ -109,7 +124,6 @@ def make_images_and_labels(path):
     
     codes_file = write_classes_to_txt(class_dict)
     df = pd.DataFrame(data={'Images': img_list, 'Masks': msk_list})
-    df=df.drop(columns=['Unnamed: 0'])
     data_file = 'data.csv'
     df.to_csv(data_file)
     
