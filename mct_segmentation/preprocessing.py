@@ -34,17 +34,17 @@ class Mouse:
         return {n: int(i) for i, n in zip(cleanind.split('|'), cleannames.split('|'))}
     
     def load_img(self):
-        return nib.load(self.img).get_fdata()
+        return nib.load(self.img).get_fdata().transpose((1,0,2))
         
     def load_lbl(self):
-        return nib.load(self.lbl).get_fdata()
+        return nib.load(self.lbl).get_fdata().transpose((1,0,2))
     
     def assign_class_new_value(self, img, old_value, new_value):
         return np.asarray(img==old_value)*new_value
     
     def convert_lbl(self, new_class_dict):
         """While all of the files are valid, the lablels have different values so we'll have to save out a new mask set with consistent labeling and as a directory of pngs for easier DataLoading"""
-        img = self.load_img()
+#         img = self.load_img()
         lbl = np.copy(self.load_lbl())
         old_class_dict = self.classes()
         new_lbl = np.stack([self.assign_class_new_value(lbl, old_class_dict[class_name], new_class_dict[class_name]) for class_name in old_class_dict]).sum(axis=0)
@@ -108,8 +108,8 @@ def make_images_and_labels(path):
         msk_list += mask_names
     
     codes_file = write_classes_to_txt(class_dict)
-    df = pd.DataFrame(list(zip(img_list, msk_list)), columns = ['Images', 'Masks'])
-    
+    df = pd.DataFrame(data={'Images': img_list, 'Masks': msk_list})
+    df=df.drop(columns=['Unnamed: 0'])
     data_file = 'data.csv'
     df.to_csv(data_file)
     
