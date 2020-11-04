@@ -9,7 +9,7 @@ from fastai.vision.all import *
 def download_and_unpack_data(rawpath):
     filename = wget.download('https://ndownloader.figstatic.com/files/12981293', out=str(rawpath/'data.zip'))
 
-    with zipfile.ZipFile(dfilename, 'r') as zip_ref:
+    with zipfile.ZipFile(filename, 'r') as zip_ref:
         zip_ref.extractall(directory_to_extract_to)
 
     if os.path.exists(filename):
