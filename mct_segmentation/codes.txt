@@ -1,11 +1,11 @@
 unclassified 
-Bone 
-Lung 
 Heart 
+Lung 
 Liver 
 Intestine 
 Bladder 
 Spleen 
-Stomach 
 Muscle 
+Stomach 
+Bone 
 Kidneys 

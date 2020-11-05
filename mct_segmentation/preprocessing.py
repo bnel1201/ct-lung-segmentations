@@ -81,6 +81,15 @@ def make_paths():
     return mask_path, image_path
 
 
+def convert_2_rgb(im):
+    """
+    adapted from https://www.kaggle.com/rashmibanthia/dicom-jpg
+    Is it correct to apply image-wise 8 bit normalization? i.e. min and max determined per image rather than per volume?
+    """
+    eps = 1e-9
+    im = (im.astype(np.float) - im.min())*255.0 / (im.max()-im.min()) + eps 
+    return im.astype(np.uint8)
+
 def save_images_and_labels(mouse, class_dict):
     mask_path, image_path = make_paths()
     
@@ -95,7 +104,7 @@ def save_images_and_labels(mouse, class_dict):
         img_names += [str(image_name)]
         msk_names += [str(mask_name)]
 
-        Image.fromarray(((imgs[:,:,i]+1000)/10000*255).astype(np.uint8)).save(image_name) # see if fastai has better solution for this 
+        Image.fromarray(convert_2_rgb(imgs[:,:,i])).save(image_name) # see if fastai has better solution for this 
         Image.fromarray(lbls[:,:,i].astype(np.uint8)).save(mask_name)
         
     return img_names, msk_names
