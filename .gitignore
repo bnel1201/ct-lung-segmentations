@@ -3,3 +3,9 @@ images/
 labels/
 */*.ipynb_checkpoints/
 *.ipynb_checkpoints/
+chest segmentations/images/
+chest segmentations/masks/
+chest segmentations/labels/
+chest segmentations/kaggle-api/
+chest segmentation/pretrained_model/
+chest\ segmentation/masks/
